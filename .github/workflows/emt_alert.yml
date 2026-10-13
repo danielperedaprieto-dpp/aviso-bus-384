@@ -1,0 +1,24 @@
+name: EMT Bus Alert
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check-bus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - env:
+          EMT_EMAIL: ${{ secrets.EMT_EMAIL }}
+          EMT_PASSWORD: ${{ secrets.EMT_PASSWORD }}
+          EMT_CLIENT_ID: ${{ secrets.EMT_CLIENT_ID }}
+          EMT_PASSKEY: ${{ secrets.EMT_PASSKEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python emt_alert.py
